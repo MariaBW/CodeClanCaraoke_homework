@@ -10,6 +10,7 @@ class RoomTest < MiniTest::Test
   def setup()
     @room1 = Room.new("Silver", 8)
     @guest1 = Guest.new("Shirley Knott")
+    @guest2 = Guest.new("Noah Peel")
     @song1 = Song.new("Park Life", "Blur")
   end
 
@@ -31,10 +32,25 @@ class RoomTest < MiniTest::Test
   end
 
   def test_guest_adds_song_to_playlist()
-    chosen_song = @guest1.choose_song(@song1)
-    @room1.add_song(chosen_song)
+    @room1.add_chosen_song(@guest1, @song1)
     assert_equal(1, @room1.playlist.length)
   end
+
+  def test_guest_leaves_room()
+    @room1.add_guest(@guest1)
+    @room1.add_guest(@guest2)
+    @room1.remove_guest(@guest1)
+    assert_equal(1, @room1.guest_list.length)
+  end
+
+  def test_room_is_full()
+    @room2 = Room.new("Tiny", 1)
+    @room2.add_guest(@guest1)
+    result = @room2.add_guest(@guest2)
+    assert_equal("Sorry, this room is now full", result)
+  end
+
+
 
 
 
