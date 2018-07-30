@@ -8,9 +8,9 @@ require_relative("../song")
 class RoomTest < MiniTest::Test
 
   def setup()
-    @room1 = Room.new("Silver", 8)
-    @guest1 = Guest.new("Shirley Knott")
-    @guest2 = Guest.new("Noah Peel")
+    @room1 = Room.new("Silver", 8, 10)
+    @guest1 = Guest.new("Shirley Knott", 50)
+    @guest2 = Guest.new("Noah Peel", 50)
     @song1 = Song.new("Park Life", "Blur")
   end
 
@@ -44,10 +44,21 @@ class RoomTest < MiniTest::Test
   end
 
   def test_room_is_full()
-    @room2 = Room.new("Tiny", 1)
+    @room2 = Room.new("Tiny", 1, 5)
     @room2.add_guest(@guest1)
     result = @room2.add_guest(@guest2)
     assert_equal("Sorry, this room is now full", result)
+  end
+
+  def test_guest_pays_fee_on_entry()
+    @room1.add_guest(@guest1)
+    assert_equal(10, @room1.till)
+  end
+
+  def test_guest_cannot_afford_entry()
+    @guest3 = Guest.new("Chantelle Athing", 5)
+    result = @room1.add_guest(@guest3)
+    assert_equal("Sorry, you must pay the entry fee", result)
   end
 
 
